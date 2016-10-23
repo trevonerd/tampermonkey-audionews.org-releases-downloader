@@ -1,1 +1,1 @@
-# Audionews Releases Downloader - Tampermonkey script
+# Audionews.org Releases Downloader - Tampermonkey script
