@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Download from Audionews.org
+// @name         Audionews.org Releases Downloader
 // @namespace    https://audionews.org
 // @version      1.0.3
 // @description  Download multiple torrents from Audionews.org
