@@ -2,7 +2,7 @@
 // @name         Audionews.org Releases Downloader
 // @namespace    https://audionews.org
 // @version      1.0.3
-// @description  Download multiple torrents from Audionews.org
+// @description  Download multiple torrents with one click from Audionews.org
 // @author       Marco Trevisani <marco.trevisani81@gmail.com>
 // @match        https://audionews.org/tracker.php*
 // @grant        GM_addStyle
