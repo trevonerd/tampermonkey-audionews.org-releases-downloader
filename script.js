@@ -32,7 +32,7 @@ GM_addStyle('.button-download { float: left; font-size: 11px; margin-right: 10px
         var date = new Date(),
             currentMonth = date.getMonth();
         if (currentMonth === 0) {
-            currentMonth = 11;
+            currentMonth = 12;
         }
         return ("0" + (currentMonth)).slice(-2);
     };
@@ -91,7 +91,7 @@ GM_addStyle('.button-download { float: left; font-size: 11px; margin-right: 10px
                 $torrentElement = $(this).parent().prev().prev().prev().prev().find("a"),
                 alreadyDownloaded = $torrentElement.hasClass(seedClass) ||  $torrentElement.hasClass(leechClass);
 
-            if (parseInt(releaseMonth) === month && !alreadyDownloaded) {
+            if (parseInt(releaseMonth) === parseInt(month) && !alreadyDownloaded) {
                 $(this).addClass("download-now");
             }
         });
