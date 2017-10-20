@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Audionews.org Releases Downloader
 // @namespace    https://audionews.org
-// @version      1.0.3
+// @version      2.0.0
 // @description  Download multiple torrents with one click from Audionews.org
 // @author       Marco Trevisani <marco.trevisani81@gmail.com>
 // @match        https://audionews.org/tracker.php*
@@ -17,7 +17,7 @@ var downloadDelay = 500,
 // CSS
 GM_addStyle('#buttons-container { width: auto; height: 26px; line-height: 26px; float: right; }');
 GM_addStyle('#buttons-label { float: left; font-size: 12px; margin-right: 10px; font-weight:bold; }');
-GM_addStyle('.button-download { float: left; font-size: 11px; margin-right: 10px; }');
+GM_addStyle('.button-download { float: left; font-size: 11px; margin-right: 12px; }');
 
 (function() {
     'use strict';
@@ -28,13 +28,24 @@ GM_addStyle('.button-download { float: left; font-size: 11px; margin-right: 10px
         return ("0" + (date.getMonth() + 1)).slice(-2);
     };
 
-    var calculatePreviousMonthFormatted = function () {
+    var getMonthName = function(month) {
         var date = new Date(),
-            currentMonth = date.getMonth();
-        if (currentMonth === 0) {
-            currentMonth = 12;
-        }
-        return ("0" + (currentMonth)).slice(-2);
+            locale = "en-us";
+        date.setMonth(month -1);
+        date.setDate(1);
+
+        var monthName = date.toLocaleString(locale, { month: "long" });
+        return monthName;
+    };
+
+    var getMonthFormatted = function(month) {
+        var date = new Date();
+
+        date.setMonth(month -1);
+        date.setDate(1);
+
+        var formattedMonth = ("0" + (date.getMonth() + 1)).slice(-2);
+        return formattedMonth;
     };
 
     var getMonthFromReleaseDate = function(releaseDate) {
@@ -48,6 +59,15 @@ GM_addStyle('.button-download { float: left; font-size: 11px; margin-right: 10px
         }
     };
 
+    var generateDownloadMonthButton = function(month) {
+        return $("<a>", {
+            class: "button-download",
+            href: "#",
+            text: getMonthName(month),
+            "data-month": getMonthFormatted(month)
+        });
+    };
+
     var appendButtons = function() {
         var $buttonsContainer = $("<div>", {
             id: "buttons-container"
@@ -58,24 +78,11 @@ GM_addStyle('.button-download { float: left; font-size: 11px; margin-right: 10px
             text: "Download: "
         });
 
-        var $buttonDownloadCurrentMonth = $("<a>", {
-            class: "button-download",
-            href: "#",
-            text: "Current Month",
-            "data-month": getCurrentMonthFormatted()
-        });
+        $buttonsContainer.append($buttonsLabel);
 
-        var $buttonDownloadPreviousMonth = $("<a>", {
-            class: "button-download previous-month",
-            href: "#",
-            text: "Previous Month",
-            "data-month": calculatePreviousMonthFormatted()
-        });
-
-        $buttonsContainer
-            .append($buttonsLabel)
-            .append($buttonDownloadCurrentMonth)
-            .append($buttonDownloadPreviousMonth);
+        for (var m = 1; m <= getCurrentMonthFormatted(); m++) {
+            $buttonsContainer.append(generateDownloadMonthButton(m));
+        }
 
         $(".spacer_6").append($buttonsContainer);
     };
