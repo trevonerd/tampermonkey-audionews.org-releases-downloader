@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         Audionews.org Releases Downloader
 // @namespace    https://audionews.org
-// @version      2.0.0
+// @version      2.1.0
 // @description  Download multiple torrents with one click from Audionews.org
 // @author       Marco Trevisani <marco.trevisani81@gmail.com>
 // @match        https://audionews.org/tracker.php*
 // @grant        GM_addStyle
-// @require      http://code.jquery.com/jquery-latest.js
+// @require      https://code.jquery.com/jquery-latest.js
 // ==/UserScript==
 
 // OPTIONS
@@ -15,9 +15,10 @@ var downloadDelay = 500,
     leechClass = "leechmed";
 
 // CSS
-GM_addStyle('#buttons-container { width: auto; height: 26px; line-height: 26px; float: right; }');
+GM_addStyle('#buttons-container { width: auto; height: 26px; line-height: 26px; float: right; margin-top: 15px }');
 GM_addStyle('#buttons-label { float: left; font-size: 12px; margin-right: 10px; font-weight:bold; }');
 GM_addStyle('.button-download { float: left; font-size: 11px; margin-right: 12px; }');
+GM_addStyle('.çurrent-month { color: #0061FF; }');
 
 (function() {
     'use strict';
@@ -26,6 +27,11 @@ GM_addStyle('.button-download { float: left; font-size: 11px; margin-right: 12px
     var getCurrentMonthFormatted = function() {
         var date = new Date();
         return ("0" + (date.getMonth() + 1)).slice(-2);
+    };
+
+    var getCurrentMonth = function() {
+        var date = new Date();
+        return date.getMonth() + 1;
     };
 
     var getMonthName = function(month) {
@@ -60,8 +66,9 @@ GM_addStyle('.button-download { float: left; font-size: 11px; margin-right: 12px
     };
 
     var generateDownloadMonthButton = function(month) {
+
         return $("<a>", {
-            class: "button-download",
+            class: "button-download" + (getCurrentMonth() === month ? " çurrent-month" : ""),
             href: "#",
             text: getMonthName(month),
             "data-month": getMonthFormatted(month)
@@ -79,8 +86,9 @@ GM_addStyle('.button-download { float: left; font-size: 11px; margin-right: 12px
         });
 
         $buttonsContainer.append($buttonsLabel);
+        var currentMonthFormatted = getCurrentMonthFormatted();
 
-        for (var m = 1; m <= getCurrentMonthFormatted(); m++) {
+        for (var m = 1; m <= 12; m++) {
             $buttonsContainer.append(generateDownloadMonthButton(m));
         }
 
@@ -113,6 +121,7 @@ GM_addStyle('.button-download { float: left; font-size: 11px; margin-right: 12px
             torrentName = $downloadLink.parent().prev().prev().prev().prev().text();
 
         $(".download-now")[i].click();
+        $downloadLink.parent().prev().prev().prev().prev().find('a').css({color: 'magenta'});
         console.log("Downloading torrent (" + (i + 1) + "): " + torrentName);
 
         i++;
